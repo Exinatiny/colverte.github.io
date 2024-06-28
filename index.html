@@ -1,30 +1,410 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Colverte: Print, Paint & Deliver</title>
-       <link rel="stylesheet"  href="css/index.css">
-         <script src="get.js"></script>
-    </head>
-    <body>
-    <div class="title">
-      <h1>Colverte: Print, Paint and Deliver</h1>
-    </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Print Wonders</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --apple-gray: #86868b;
+            --apple-light-gray: #f5f5f7;
+            --apple-blue: #0071e3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -.022em;
+            background-color: #fff;
+            color: #1d1d1f;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 22px;
+        }
+        
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 44px;
+            padding: 0 22px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav a {
+            color: #000;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: var(--apple-blue);
+        }
+        
+        .logo {
+            font-size: 21px;
+            font-weight: 500;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 120px 0 60px;
+            background-color: var(--apple-light-gray);
+        }
+        
+        h1 {
+            font-size: 56px;
+            line-height: 1.07143;
+            font-weight: 600;
+            letter-spacing: -.005em;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            font-size: 48px;
+            line-height: 1.08349;
+            font-weight: 600;
+            letter-spacing: -.003em;
+            margin-bottom: 20px;
+        }
+        
+        h3 {
+            font-size: 28px;
+            line-height: 1.14286;
+            font-weight: 500;
+            letter-spacing: .007em;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            font-size: 21px;
+            line-height: 1.381;
+            font-weight: 400;
+            letter-spacing: .011em;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .product-card {
+            background-color: #fff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .product-price {
+            font-size: 18px;
+            color: var(--apple-gray);
+            margin-bottom: 15px;
+        }
+        
+        .cta {
+            display: inline-block;
+            background-color: var(--apple-blue);
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 980px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .cta:hover {
+            background-color: #0077ed;
+        }
+        
+        footer {
+            background-color: var(--apple-light-gray);
+            color: var(--apple-gray);
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+        }
+        
+        /* New styles for STL upload feature */
+        .upload-area {
+            border: 2px dashed var(--apple-gray);
+            border-radius: 18px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area.dragover {
+            background-color: var(--apple-light-gray);
+            border-color: var(--apple-blue);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--apple-gray);
+            margin-bottom: 20px;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background-color: var(--apple-blue);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 980px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            background-color: #0077ed;
+        }
+        
+        #upload-status {
+            margin-top: 20px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">3D Print Wonders</div>
+            <ul>
+                <li><a href="#featured">Featured</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#custom">Custom Orders</a></li>
+                <li><a href="#upload">Upload STL</a></li>
+            </ul>
+        </nav>
+    </header>
 
-
-    <!-- <img class="bird" src="img/bird.png"> -->
-            <div class = "txtbox">
-        <h4> Our job is print, paint and<br> deliver
-            premium statues.<br>
-          We make many<br> cute characters,<br> 
-                    all hand painted. <h6>
-           </div>
-            <div class = "txtbox2">
-      <h4>We make our items together,<br> it's a
-            team effort.<br>
-          If you like what you see, <br>
-          look at the shopping<br> 
-                area below
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>3D Printed Marvels</h1>
+                <p>Discover a world of incredible, custom-made creations.</p>
             </div>
-       
-    </body>
+        </section>
+
+        <section id="featured" class="section">
+            <div class="container">
+                <h2>Featured Products</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <img src="/api/placeholder/300/200" alt="3D Printed Vase" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">Geometric Vase</h3>
+                            <p class="product-price">$49.99</p>
+                            <a href="#" class="cta">Buy Now</a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/300/200" alt="3D Printed Lamp" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">Modern Lamp</h3>
+                            <p class="product-price">$79.99</p>
+                            <a href="#" class="cta">Buy Now</a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/300/200" alt="3D Printed Sculpture" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">Abstract Sculpture</h3>
+                            <p class="product-price">$129.99</p>
+                            <a href="#" class="cta">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="categories" class="section" style="background-color: var(--apple-light-gray);">
+            <div class="container">
+                <h2>Explore Categories</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <img src="/api/placeholder/300/200" alt="Home Decor" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">Home Decor</h3>
+                            <a href="#" class="cta">Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/300/200" alt="Jewelry" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">Jewelry</h3>
+                            <a href="#" class="cta">Shop Now</a>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <img src="/api/placeholder/300/200" alt="Gadgets" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">Gadgets</h3>
+                            <a href="#" class="cta">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="custom" class="section">
+            <div class="container">
+                <h2>Custom Orders</h2>
+                <p>Bring your imagination to life with our custom 3D printing service.</p>
+                <a href="#" class="cta">Start Your Project</a>
+            </div>
+        </section>
+
+        <section id="upload" class="section" style="background-color: var(--apple-light-gray);">
+            <div class="container">
+                <h2>Upload Your STL File</h2>
+                <p>Have your own 3D model? Upload it here and we'll bring it to life!</p>
+                <div class="upload-area" id="drop-area">
+                    <div class="upload-icon">📁</div>
+                    <p>Drag and drop your STL file here</p>
+                    <p>or</p>
+                    <input type="file" id="file-input" accept=".stl" />
+                    <button class="upload-btn" onclick="document.getElementById('file-input').click()">Select File</button>
+                </div>
+                <p id="upload-status"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Copyright © 2024 3D Print Wonders. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const uploadStatus = document.getElementById('upload-status');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            dropArea.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            dropArea.classList.remove('dragover');
+        }
+
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.name.toLowerCase().endsWith('.stl')) {
+                    uploadFile(file);
+                } else {
+                    uploadStatus.textContent = 'Please upload an STL file.';
+                }
+            }
+        }
+
+        function uploadFile(file) {
+            // In a real implementation, you would send the file to your server here.
+            // For this example, we'll just simulate a successful upload.
+            uploadStatus.textContent = 'Uploading...';
+            
+            setTimeout(() => {
+                uploadStatus.textContent = File "${file.name}" uploaded successfully!;
+            }, 2000);
+        }
+    </script>
+</body>
 </html>
